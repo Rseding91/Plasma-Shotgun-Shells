@@ -1,6 +1,4 @@
-require "defines"
 
-local loaded = false
 local PelletName = "plasma-pellet"
 local CloudName = "plasma-cloud"
 local PelletSearchRadius = 2
@@ -12,29 +10,29 @@ local knownNames = {
 function ticker(event)
   if not processPellets(global.pellets) then
     global.ticking = nil
-    game.on_event(defines.events.on_tick, nil)
+    script.on_event(defines.events.on_tick, nil)
   end
 end
 
 function init()
-  if not loaded then
-    loaded = true
-    
-    if global.pellets == nil then
-      global.pellets = {}
-    end
-    
-    if global.ticking ~= nil then
-      game.on_event(defines.events.on_tick, ticker)
-    end
+  global.pellets = {}
+end
+
+function onLoad()
+  if global.pellets == nil then
+    global.pellets = {}
+  end
+  
+  if global.ticking ~= nil then
+    script.on_event(defines.events.on_tick, ticker)
   end
 end
 
-game.on_init(init)
-game.on_load(init)
+script.on_init(init)
+script.on_load(onLoad)
 
 
-game.on_event(defines.events.on_trigger_created_entity, function(event)
+script.on_event(defines.events.on_trigger_created_entity, function(event)
   if knownNames[event.entity.name] then
     for _,player in pairs(event.entity.force.players) do
       setupPelletsFromPelletSpawn(event.entity, player.position)
@@ -60,7 +58,7 @@ function setupPelletsFromPelletSpawn(entity, position)
       
       if global.ticking == nil then
         global.ticking = true
-        game.on_event(defines.events.on_tick, ticker)
+        script.on_event(defines.events.on_tick, ticker)
       end
     end
   end
