@@ -19,10 +19,6 @@ function init()
 end
 
 function onLoad()
-  if global.pellets == nil then
-    global.pellets = {}
-  end
-  
   if global.ticking ~= nil then
     script.on_event(defines.events.on_tick, ticker)
   end
